@@ -6,22 +6,59 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.collections4.IteratorUtils;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.pulse.spring.files.csv.model.Tutorial;
 
 public class ExcelHelper {
-	// public static String TYPE =
-	// "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-	
-	public static String TYPE = "application/vnd.ms-excel";
-	static String[] HEADERs = { "Id", "Titulo", "Descricao", "Publicacao" };
-	static String SHEET = "Tutorials";
+
+	public static List<Tutorial> criar(InputStream is) {
+		List<Tutorial> tutoriais = new ArrayList<>();
+
+		try {
+			
+			Workbook workbook = new HSSFWorkbook(is);
+
+			// setando a aba
+			Sheet sheet = workbook.getSheetAt(0);
+
+			List<Row> rows = (List<Row>) toList(sheet.iterator());
+
+			rows.forEach(row -> {
+				List<Cell> cells = (List<Cell>) toList(row.cellIterator());
+
+				Tutorial tutorial = new Tutorial();
+				tutorial.setId(cells.get(0).getRowIndex());
+				tutorial.setTitulo(cells.get(1).getStringCellValue());
+				tutorial.setDescricao(cells.get(2).getStringCellValue());
+				tutorial.setPublicacao(cells.get(3).getStringCellValue());
+
+				tutoriais.add(tutorial);
+				
+				
+			}
+
+			);
+			
+			workbook.close();
+		} 
+		
+		catch (IOException e) {
+			throw new RuntimeException("falha ao analisar arquivo: " + e.getMessage());
+		}
+		
+		return tutoriais;
+
+	}
+
+	public static List<?> toList(Iterator<?> iterator) {
+		return IteratorUtils.toList(iterator);
+	}
 
 	/*
 	 * public static boolean hasExcelFormat(MultipartFile file) {
@@ -30,66 +67,4 @@ public class ExcelHelper {
 	 * 
 	 * return true; }
 	 */
-	public static List<Tutorial> excelToTutorials(InputStream is) {
-		try {
-			Workbook workbook = new XSSFWorkbook(is);
-
-			Sheet sheet = workbook.getSheet(SHEET);
-			Iterator<Row> rows = sheet.iterator();
-
-			List<Tutorial> tutorials = new ArrayList<Tutorial>();
-
-			int rowNumber = 0;
-			while (rows.hasNext()) {
-				Row currentRow = rows.next();
-
-				// skip header
-				if (rowNumber == 0) {
-					rowNumber++;
-					continue;
-				}
-
-				Iterator<Cell> cellsInRow = currentRow.iterator();
-
-				Tutorial tutorial = new Tutorial();
-
-				int cellIdx = 0;
-				while (cellsInRow.hasNext()) {
-					Cell currentCell = cellsInRow.next();
-
-					switch (cellIdx) {
-					case 0:
-						tutorial.setId((long) currentCell.getNumericCellValue());
-						break;
-
-					case 1:
-						tutorial.setTitle(currentCell.getStringCellValue());
-						break;
-
-					case 2:
-						tutorial.setDescription(currentCell.getStringCellValue());
-						break;
-
-					case 3:
-						tutorial.setPublished(currentCell.getBooleanCellValue());
-						break;
-
-					default:
-						break;
-					}
-
-					cellIdx++;
-				}
-
-				tutorials.add(tutorial);
-			}
-
-			workbook.close();
-
-			return tutorials;
-		} catch (IOException e) {
-			throw new RuntimeException("fail to parse Excel file: " + e.getMessage());
-		}
 	}
-
-}

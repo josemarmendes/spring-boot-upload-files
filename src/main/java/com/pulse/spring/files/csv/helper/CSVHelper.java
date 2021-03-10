@@ -48,7 +48,7 @@ public class  CSVHelper {
 						Long.parseLong(csvRecord.get("Id")), 
 						csvRecord.get("Titulo"),
 						csvRecord.get("Descricao"), 
-						Boolean.parseBoolean(csvRecord.get("Publicacao")));
+						csvRecord.get("Publicacao"));
 
 				tutorials.add(tutorial);
 			}
@@ -65,8 +65,8 @@ public class  CSVHelper {
 		try (ByteArrayOutputStream out = new ByteArrayOutputStream();
 				CSVPrinter csvPrinter = new CSVPrinter(new PrintWriter(out), format);) {
 			for (Tutorial tutorial : tutorials) {
-				List<String> data = Arrays.asList(String.valueOf(tutorial.getId()), tutorial.getTitle(),
-						tutorial.getDescription(), String.valueOf(tutorial.isPublished()));
+				List<String> data = Arrays.asList(String.valueOf(tutorial.getId()), tutorial.getTitulo(),
+						tutorial.getDescricao(), String.valueOf(tutorial.getPublicacao()));
 
 				csvPrinter.printRecord(data);
 			}

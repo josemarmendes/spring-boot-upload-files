@@ -9,65 +9,65 @@ import javax.persistence.Table;
 @Table(name = "tutorials")
 public class Tutorial {
 
-  @Id
-  @Column(name = "id")
-  private long id;
+	@Id
+	@Column(name = "id")
+	private long id;
 
-  @Column(name = "title")
-  private String title;
+	@Column(name = "titulo")
+	private String titulo;
 
-  @Column(name = "description")
-  private String description;
+	@Column(name = "descricao")
+	private String descricao;
 
-  @Column(name = "published")
-  private boolean published;
+	@Column(name = "publicacao")
+	private String publicacao;
 
-  public Tutorial() {
+	public Tutorial() {
 
-  }
+	}
 
-  public Tutorial(long id, String title, String description, boolean published) {
-    this.id = id;
-    this.title = title;
-    this.description = description;
-    this.published = published;
-  }
+	public Tutorial(long id, String titulo, String descricao, String publicacao) {
+		this.id = id;
+		this.titulo = titulo;
+		this.descricao = descricao;
+		this.publicacao = publicacao;
+	}
 
-  public long getId() {
-    return id;
-  }
+	public long getId() {
+		return id;
+	}
 
-  public void setId(long id) {
-    this.id = id;
-  }
+	public void setId(long id) {
+		this.id = id;
+	}
 
-  public String getTitle() {
-    return title;
-  }
+	public String getTitulo() {
+		return titulo;
+	}
 
-  public void setTitle(String title) {
-    this.title = title;
-  }
+	public void setTitulo(String titulo) {
+		this.titulo = titulo;
+	}
 
-  public String getDescription() {
-    return description;
-  }
+	public String getDescricao() {
+		return descricao;
+	}
 
-  public void setDescription(String description) {
-    this.description = description;
-  }
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
+	}
 
-  public boolean isPublished() {
-    return published;
-  }
+	public String getPublicacao() {
+		return publicacao;
+	}
 
-  public void setPublished(boolean isPublished) {
-    this.published = isPublished;
-  }
+	public void setPublicacao(String publicacao) {
+		this.publicacao = publicacao;
+	}
 
-  @Override
-  public String toString() {
-    return "Tutorial [id=" + id + ", title=" + title + ", desc=" + description + ", published=" + published + "]";
-  }
+	@Override
+	public String toString() {
+		return "Tutorial [id=" + id + ", titulo=" + titulo + ", desc=" + descricao + ", publicado=" + publicacao + "]";
+	}
 
 }
