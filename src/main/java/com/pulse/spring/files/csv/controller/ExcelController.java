@@ -9,13 +9,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
 import com.pulse.spring.files.csv.message.ResponseMessage;
 import com.pulse.spring.files.csv.service.ExcelService;
-@CrossOrigin("http://localhost:8081")
+
+//@CrossOrigin("http://localhost:8081")
 @RestController
 @RequestMapping("/api/excel")
 public class ExcelController {
+	
 	@Autowired
 	private ExcelService excelService;
 

@@ -16,14 +16,13 @@ import org.apache.poi.ss.usermodel.Workbook;
 import com.pulse.spring.files.csv.model.Tutorial;
 
 public class ExcelHelper {
-
 	public static List<Tutorial> criar(InputStream is) {
 		List<Tutorial> tutoriais = new ArrayList<>();
 
 		try {
-			
-			Workbook workbook = new HSSFWorkbook(is);
 
+			Workbook workbook = new HSSFWorkbook(is);
+			
 			// setando a aba
 			Sheet sheet = workbook.getSheetAt(0);
 
@@ -39,19 +38,22 @@ public class ExcelHelper {
 				tutorial.setPublicacao(cells.get(3).getStringCellValue());
 
 				tutoriais.add(tutorial);
-				
-				
+
+				try {
+					workbook.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+
 			}
 
 			);
-			
-			workbook.close();
-		} 
-		
+
+		}
 		catch (IOException e) {
 			throw new RuntimeException("falha ao analisar arquivo: " + e.getMessage());
 		}
-		
+
 		return tutoriais;
 
 	}
@@ -67,4 +69,5 @@ public class ExcelHelper {
 	 * 
 	 * return true; }
 	 */
-	}
+
+}

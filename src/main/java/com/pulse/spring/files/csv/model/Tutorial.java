@@ -11,8 +11,12 @@ public class Tutorial {
 
 	@Id
 	@Column(name = "id")
+	//@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
-
+	
+	/*
+	 * @Column(name = "frequencia") private Integer frequencia;
+	 */
 	@Column(name = "titulo")
 	private String titulo;
 
@@ -64,6 +68,13 @@ public class Tutorial {
 	public void setPublicacao(String publicacao) {
 		this.publicacao = publicacao;
 	}
+
+	/*
+	 * public Integer getFrequencia() { return frequencia; }
+	 * 
+	 * public void setFrequencia(Integer frequencia) { this.frequencia = frequencia;
+	 * }
+	 */
 
 	@Override
 	public String toString() {
