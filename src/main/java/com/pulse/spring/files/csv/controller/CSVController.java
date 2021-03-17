@@ -27,53 +27,68 @@ import com.pulse.spring.files.csv.service.CSVService;
 @RequestMapping("/api/csv")
 public class CSVController {
 
-  @Autowired
-  private CSVService fileService;
+	@Autowired
+	private CSVService fileService;
 
-  @PostMapping("/upload")
-  public ResponseEntity<ResponseMessage> uploadFile(@RequestParam("file") MultipartFile file) {
-    String message = "";
+	@PostMapping("/upload")
+	public ResponseEntity<ResponseMessage> uploadFile(@RequestParam("file") MultipartFile file) {
+		String message = "";
 
-    if (CSVHelper.hasCSVFormat(file)) {
-      try {
-        fileService.save(file);
+		if (CSVHelper.hasCSVFormat(file)) {
+			try {
+				fileService.salvarArquivo(file);
 
-        message = "Upload do arquivo realizado com sucesso: " + file.getOriginalFilename();
-        return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));
-      } catch (Exception e) {
-        message = "Não foi possível salvar o arquivo: " + file.getOriginalFilename() + "!";
-        return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponseMessage(message));
-      }
-    }
+				message = "Upload do arquivo realizado com sucesso: " + file.getOriginalFilename();
+				return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));
+			} catch (Exception e) {
+				message = "Não foi possível salvar o arquivo: " + file.getOriginalFilename() + "!";
+				return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponseMessage(message));
+			}
+		}
 
-    message = "Por favor o upload deve ser um csv file!";
-    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseMessage(message));
-  }
+		message = "Por favor o upload deve ser um csv file!";
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseMessage(message));
+	}
 
-  @GetMapping("/tutorials")
-  public ResponseEntity<List<Tutorial>> getAllTutorials() {
-    try {
-      List<Tutorial> tutorials = fileService.getAllTutorials();
+	@PostMapping("/upload/txt")
+	public ResponseEntity<ResponseMessage> uploadArquivoTxt(@RequestParam("file") MultipartFile file) {
+		String message = "";
 
-      if (tutorials.isEmpty()) {
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-      }
+		try {
+			fileService.salvarArquivoTxt(file);
 
-      return new ResponseEntity<>(tutorials, HttpStatus.OK);
-    } catch (Exception e) {
-      return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-  }
+			message = "Upload do arquivo realizado com sucesso: " + file.getOriginalFilename();
+			return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));
+		
+		} catch (Exception e) {
+			message = "Não foi possível salvar o arquivo: " + file.getOriginalFilename() + "!";
+			return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponseMessage(message));
+		}
 
-  @GetMapping("/download")
-  public ResponseEntity<Resource> getFile() {
-    String filename = "tutorials.csv";
-    InputStreamResource file = new InputStreamResource(fileService.load());
+	}
 
-    return ResponseEntity.ok()
-        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename)
-        .contentType(MediaType.parseMediaType("application/csv"))
-        .body(file);
-  }
+	@GetMapping("/tutorials")
+	public ResponseEntity<List<Tutorial>> getAllTutorials() {
+		try {
+			List<Tutorial> tutorials = fileService.getAllTutorials();
+
+			if (tutorials.isEmpty()) {
+				return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+			}
+
+			return new ResponseEntity<>(tutorials, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@GetMapping("/download")
+	public ResponseEntity<Resource> getFile() {
+		String filename = "tutorials.csv";
+		InputStreamResource file = new InputStreamResource(fileService.load());
+
+		return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename)
+				.contentType(MediaType.parseMediaType("application/csv")).body(file);
+	}
 
 }
